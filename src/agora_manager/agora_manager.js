@@ -5,7 +5,7 @@ import { AudienceLatencyLevelType } from "agora-rtc-sdk-ng";
 const AgoraManager = async (eventsCallback, product) => {
   let agoraEngine = null;
 
-  // Set up the signaling engine with the provided App ID, UID, and configuration
+  // Set mode to "live" for broadcast streaming or "rtc" for video calling
   const setupAgoraEngine = async () => {
     agoraEngine = new AgoraRTC.createClient({ mode: product, codec: "vp9" });
   };
