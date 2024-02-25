@@ -1,12 +1,13 @@
 import AgoraRTC from "agora-rtc-sdk-ng";
 import config from "./config.json";
+import { AudienceLatencyLevelType } from "agora-rtc-sdk-ng";
 
-const AgoraManager = async (eventsCallback) => {
+const AgoraManager = async (eventsCallback, product) => {
   let agoraEngine = null;
 
   // Set up the signaling engine with the provided App ID, UID, and configuration
   const setupAgoraEngine = async () => {
-    agoraEngine = new AgoraRTC.createClient({ mode: "rtc", codec: "vp9" });
+    agoraEngine = new AgoraRTC.createClient({ mode: product, codec: "vp9" });
   };
   await setupAgoraEngine();
 
@@ -34,6 +35,7 @@ const AgoraManager = async (eventsCallback) => {
       config.token,
       config.uid
     );
+
     // Create a local audio track from the audio sampled by a microphone.
     channelParameters.localAudioTrack =
       await AgoraRTC.createMicrophoneAudioTrack();
@@ -50,6 +52,17 @@ const AgoraManager = async (eventsCallback) => {
     channelParameters.localVideoTrack.play(localPlayerContainer);
   };
 
+  const setUserRole = (role) => {
+    if(role == "audience")
+    {
+      agoraEngine.setClientRole(role, AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY);
+    }
+    else
+    {
+      agoraEngine.setClientRole(role, null);
+    }
+  }
+
   const leave = async (channelParameters) => {
     // Destroy the local audio and video tracks.
     channelParameters.localAudioTrack.close();
@@ -64,6 +77,7 @@ const AgoraManager = async (eventsCallback) => {
     config,
     join,
     leave,
+    setUserRole
   };
 };
 

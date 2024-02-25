@@ -1,7 +1,5 @@
 import AgoraManagerMultiChannel from "./agora_manager_multi_channel.js";
-import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-import docURLs from "../utils/docSteURLs.js";
 
 // A variable to track the co-hosting state.
 var isCoHost = false;
@@ -35,10 +33,23 @@ let channelParameters = {
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
-  // Set the project selector
-  setupProjectSelector();
 
-  const handleVSDKEvents = (eventName, ...args) => {
+  // Parse the product from the URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get('product');
+  
+  // Set the project selector
+  setupProjectSelector(product);
+
+  if (product === "rtc") {
+    const log = document.getElementById("log");
+    const msg = document.createElement("div");
+    msg.innerHTML = "This is only for video calling.";
+    log.append(msg);
+    return;
+  }
+
+  const handleVSDKEvents = (eventName, ...args)  => {
     switch (eventName) {
       case "user-published":
         if (args[1] == "video") {
@@ -68,7 +79,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraManagerMultiChannel(handleVSDKEvents);
+  const agoraManager = await AgoraManagerMultiChannel(handleVSDKEvents, product);
 
   // Display channel name
   document.getElementById("channelName").innerHTML =

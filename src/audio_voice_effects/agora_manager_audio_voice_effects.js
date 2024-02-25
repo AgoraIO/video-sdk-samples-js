@@ -1,12 +1,9 @@
 import AgoraManager from "../agora_manager/agora_manager.js";
 import AgoraRTC from "agora-rtc-sdk-ng";
 
-const AgoraManagerAudioVoice = async (eventsCallback) => {
+const AgoraManagerAudioVoice = async (eventsCallback, product) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
-
-  // Get the config
-  const config = agoraManager.config;
+  const agoraManager = await AgoraManager(eventsCallback, product);
 
   const stopProcessAudioBuffer = async (audioFileTrack, channelParameters) => {
     // To stop audio mixing, stop processing the audio data.

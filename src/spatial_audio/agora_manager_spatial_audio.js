@@ -2,9 +2,9 @@ import AgoraManager from "../agora_manager/agora_manager.js";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { SpatialAudioExtension } from "agora-extension-spatial-audio";
 
-const AgoraManagerSpatialAudio = async (eventsCallback) => {
+const AgoraManagerSpatialAudio = async (eventsCallback, product) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
+  const agoraManager = await AgoraManager(eventsCallback, product);
 
   // Get the config
   const config = agoraManager.config;

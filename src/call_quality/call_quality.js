@@ -1,7 +1,5 @@
 import AgoraCallQuality from "../call_quality/agora_manager_call_quality.js";
-import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-import docURLs from "../utils/docSteURLs.js";
 
 // A variable to track the state of remote video quality.
 var isHighRemoteVideoQuality = false;
@@ -29,8 +27,14 @@ let channelParameters = {
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
+
+  // Parse the product from the URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get('product');
+ 
   // Set the project selector
-  setupProjectSelector();
+  setupProjectSelector(product);
+    
 
   const handleVSDKEvents = (eventName, ...args) => {
     switch (eventName) {
@@ -83,7 +87,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraCallQuality(handleVSDKEvents);
+  const agoraManager = await AgoraCallQuality(handleVSDKEvents, product);
 
   // Display channel name
   document.getElementById("channelName").innerHTML =
@@ -126,6 +130,38 @@ window.onload = async () => {
     option.text = devices.videoDevices[i].label;
     option.value = devices.videoDevices[i].deviceId;
     videoDevicesDropDown.appendChild(option);
+  }
+
+  if(product == "live")
+  {
+    createToggleSwitch();
+  }
+  function createToggleSwitch() {
+    const toggleContainer = document.getElementById('toggleContainer');
+
+    // Create a label
+    const label = document.createElement('label');
+    label.textContent = 'Join as an audience :';
+
+    // Create a checkbox
+    const toggleSwitch = document.createElement('input');
+    toggleSwitch.type = 'checkbox';
+    toggleSwitch.id = 'dynamicToggleSwitch';
+
+    // Append the label and checkbox to the container
+    toggleContainer.appendChild(label);
+    toggleContainer.appendChild(toggleSwitch);
+
+    // Add event listener for the dynamic toggle switch
+    toggleSwitch.addEventListener('change', function() {
+      if (toggleSwitch.checked) {
+        console.log('Audience selected');
+        agoraManager.setUserRole("audience")
+      } else {
+        console.log('Host selected');
+        agoraManager.setUserRole("host")
+      }
+    });
   }
 
   // Listen to the Join button click event.

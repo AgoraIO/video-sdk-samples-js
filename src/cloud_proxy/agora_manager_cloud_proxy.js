@@ -1,8 +1,8 @@
 import AgoraManager from "../agora_manager/agora_manager.js";
 
-const AgoraManagerCloudProxy = async (eventsCallback) => {
+const AgoraManagerCloudProxy = async (eventsCallback, product) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
+  const agoraManager = await AgoraManager(eventsCallback, product);
   const agoraEngine = agoraManager.getAgoraEngine();
 
   // Get the config

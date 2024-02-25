@@ -2,12 +2,9 @@ import AgoraManager from "../agora_manager/agora_manager.js";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { AIDenoiserExtension } from "agora-extension-ai-denoiser";
 
-const AgoraManagerAINoiseSuppression = async (eventsCallback) => {
+const AgoraManagerAINoiseSuppression = async (eventsCallback, product) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
-
-  // Get the config
-  const config = agoraManager.config;
+  const agoraManager = await AgoraManager(eventsCallback, product);
 
   const enableAIDenoiser = async (channelParameters) => {
     // Create an AIDenoiserExtension instance, and pass in the host URL of the Wasm files
