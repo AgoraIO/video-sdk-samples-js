@@ -20,8 +20,13 @@ let channelParameters = {
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
+
+  // Parse the product from the URL query parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get('product');
+    
   // Set the project selector
-  setupProjectSelector();
+  setupProjectSelector(product);
   var isSharingEnabled = false;
   var isMuteVideo = false;
 
@@ -87,7 +92,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraManagerProductWorkflow(handleVSDKEvents);
+  const agoraManager = await AgoraManagerProductWorkflow(handleVSDKEvents, product);
 
   // Display channel name
   document.getElementById("channelName").innerHTML =
@@ -180,6 +185,37 @@ window.onload = async () => {
       isMuteVideo = false;
     }
   };
+  if(product == "live")
+  {
+    createToggleSwitch();
+  }
+  function createToggleSwitch() {
+    const toggleContainer = document.getElementById('toggleContainer');
+
+    // Create a label
+    const label = document.createElement('label');
+    label.textContent = 'Join as an audience :';
+
+    // Create a checkbox
+    const toggleSwitch = document.createElement('input');
+    toggleSwitch.type = 'checkbox';
+    toggleSwitch.id = 'dynamicToggleSwitch';
+
+    // Append the label and checkbox to the container
+    toggleContainer.appendChild(label);
+    toggleContainer.appendChild(toggleSwitch);
+
+    // Add event listener for the dynamic toggle switch
+    toggleSwitch.addEventListener('change', function() {
+      if (toggleSwitch.checked) {
+        console.log('Audience selected');
+        agoraManager.setUserRole("audience")
+      } else {
+        console.log('Host selected');
+        agoraManager.setUserRole("host")
+      }
+    });
+  }
 };
 
 function removeVideoDiv(elementId) {

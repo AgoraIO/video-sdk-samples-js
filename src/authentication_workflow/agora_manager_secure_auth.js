@@ -1,15 +1,12 @@
 import AgoraManager from "../agora_manager/agora_manager.js";
 import AgoraRTC from "agora-rtc-sdk-ng";
+import config from "../agora_manager/config.json";
 
-const AgoraManagerAuthentication = async (eventsCallback) => {
-  let streamChannel = null;
+const AgoraManagerAuthentication = async (eventsCallback, product) => {
   let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
-
-  // Get the config
-  const config = agoraManager.config;
+  const agoraManager = await AgoraManager(eventsCallback, product);
 
   // Fetches the RTC token for stream channels
   async function fetchToken(uid, channelName) {

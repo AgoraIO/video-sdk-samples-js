@@ -1,9 +1,8 @@
 import AgoraManager from "../agora_manager/agora_manager.js";
 
-const AgoraChannelEncryption = async (eventsCallback) => {
+const AgoraChannelEncryption = async (eventsCallback, config) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraManager(eventsCallback);
-  const config = agoraManager.config;
+  const agoraManager = await AgoraManager(eventsCallback, config);
   let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
   // Fetches the token for stream channels
@@ -39,6 +38,41 @@ const AgoraChannelEncryption = async (eventsCallback) => {
     }
   }
 
+  if(config.product == "live")
+  {
+    createToggleSwitch();
+  }
+  function createToggleSwitch() {
+    const toggleContainer = document.getElementById('toggleContainer');
+
+    // Create a label
+    const label = document.createElement('label');
+    label.textContent = 'Host :';
+
+    // Create a checkbox
+    const toggleSwitch = document.createElement('input');
+    toggleSwitch.type = 'checkbox';
+    toggleSwitch.id = 'dynamicToggleSwitch';
+
+    // Append the label and checkbox to the container
+    toggleContainer.appendChild(label);
+    toggleContainer.appendChild(toggleSwitch);
+
+    // Add event listener for the dynamic toggle switch
+    toggleSwitch.addEventListener('change', function() {
+      if(agoraEngine == null)
+      {
+        console.log("Join a channel to change the user role");
+      }
+      if (toggleSwitch.checked) {
+        console.log('Host selected');
+        setUserRole("host")
+      } else {
+        console.log('Audience selected');
+        setUserRole("audience")
+      }
+    });
+  }
   // In a production environment, you retrieve the key and salt from
   // an authentication server. For this code example you generate locally.
   var encryptionKey = "";
@@ -121,7 +155,7 @@ const AgoraChannelEncryption = async (eventsCallback) => {
     // Play the local video track.
     channelParameters.localVideoTrack.play(localPlayerContainer);
   };
-
+  
   async function setEncryptionStream(sender, password) {
     const streams = sender.createEncodedStreams();
     const transformer = new TransformStream({
